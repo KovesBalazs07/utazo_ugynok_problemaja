@@ -1,0 +1,84 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace utazo_ugynok_problemaja
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            List<string> utvonalak = new List<string>() {"AB", "AE","AF","BF","BC","CF","CD","DF","DE","EF"};
+            List<int> hosszok = new List<int>() {10,10,11,7,25,8,5,5,8,9};
+            Console.Write("Honnan indulsz:");
+            char indul = char.Parse(Console.ReadLine());
+            Console.Write("Hová tartasz:");
+            char erkezik = char.Parse(Console.ReadLine());
+            if (indul == erkezik)
+            {
+                Console.WriteLine("Az indulási és az érkezési pont NEM lehet azonos");
+            }
+            else
+            {
+                List<string> utotletek = new List<string>();
+                List<int> hosszotletek = new List<int>();
+                utotletek.Add(indul.ToString());
+                hosszotletek.Add(0);
+                for (int i = 0; i < utotletek.Count; i++)
+                {
+                    string otlet = utotletek[i];
+                    int ido = hosszotletek[i];
+                    char ez = otlet[otlet.Length - 1];
+                    if (ez == erkezik)
+                    {
+                        continue;
+                    }
+                        
+                    for (int x = 0; x < utvonalak.Count; x++)
+                    {
+                        char eleje = utvonalak[x][0];
+                        char vege = utvonalak[x][utvonalak[x].Length - 1];
+                        if (eleje == ez && !otlet.Contains(vege))
+                        {
+                            utotletek.Add(otlet + vege);
+                            hosszotletek.Add(ido + hosszok[x]);
+                        }
+                        else if (vege == ez && !otlet.Contains(eleje))
+                        {
+                            utotletek.Add(otlet + eleje);
+                            hosszotletek.Add(ido + hosszok[x]);
+                        }
+                    }
+                }
+                string utvonal = "";
+                int tavolsag = int.MaxValue;
+                for(int i = utotletek.Count - 1; i >= 0; i--)
+                {
+                    if (utotletek[i][utotletek[i].Length - 1] != erkezik)
+                    {
+                        utotletek.RemoveAt(i);
+                        hosszotletek.RemoveAt(i);
+                    }
+                }
+                
+                for (int i = 0; i < hosszotletek.Count; i++)
+                {
+                    if (utotletek[i][utotletek[i].Length - 1] == erkezik)
+                    {
+                        if (hosszotletek[i] < tavolsag)
+                        {
+                            tavolsag = hosszotletek[i];
+                            utvonal = utotletek[i];
+                        }
+                    }
+                }
+
+                Console.WriteLine("A legjobb út:{0} és az ehhez szükséges időtartam:{1}", utvonal, tavolsag);
+            }
+            
+            Console.ReadLine();
+        }
+    }
+}
